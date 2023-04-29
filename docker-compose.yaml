@@ -1,0 +1,32 @@
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./app:/app
+  php:
+    build:
+      context: .
+      dockerfile: PHP.dockerfile
+    expose:
+      - 9000
+    volumes:
+      - ./app:/app
+      - ./php-config/xdebug.ini:/usr/local/etc/php/conf.d/php-ext-xdebug.ini
+      - ./php-config/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+  database:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: 'swcdemoroot'
+      MYSQL_USER: 'swcdemo'
+      MYSQL_PASSWORD: 'swcdemo'
+      MYSQL_DATABASE: 'swcombine-prospecting-results'
+    volumes:
+      - database:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  database: {}
