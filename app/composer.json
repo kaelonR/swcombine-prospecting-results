@@ -1,3 +1,14 @@
 {
-
+    "_comment": "NOTE: composer deps are handled in the build stage of the php docker image.",
+    "_comment2": "To install deps, add them here, then run 'docker-compose up -d --build php' to update the image.",
+    "require": {
+        "twig/twig": "^2.0",
+        "php-di/php-di": "^7.0",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SWCPR\\": "/app/src/"
+        }
+    }
 }
