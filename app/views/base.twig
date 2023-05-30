@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
     <link rel="stylesheet" href="/assets/css/reset.css"/>
     <link rel="stylesheet" href="/assets/css/main.css"/>
@@ -9,7 +9,18 @@
     {% endblock %}
 </head>
 <body>
-    <div id="content">
+    <nav class="navigation">
+        <div class="navigation__label">
+            <span>SWCombine Prospecting Results</span>
+        </div>
+        <a class="navigation__button" href="/planets">
+            <span>Browse Planets</span>
+        </a>
+        <a class="navigation__button" href="/add-planet">
+            <span>Add Planet</span>
+        </a>
+    </nav>
+    <div class="content">
             {% block content %}{% endblock %}
     </div>
 </body>

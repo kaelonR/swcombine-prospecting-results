@@ -1,10 +1,13 @@
 {
-    "_comment": "NOTE: composer deps are handled in the build stage of the php docker image.",
-    "_comment2": "To install deps, add them here, then run 'docker-compose up -d --build php' to update the image.",
+    "_comment": "NOTE: composer deps are included in the PHP image during the build step.",
+    "_comment2": "To install deps, add them here, then run 'docker-compose up -d --build php' or 'docker-compose build php' to update the image.",
     "require": {
         "twig/twig": "^2.0",
         "php-di/php-di": "^7.0",
-        "ext-pdo": "*"
+        "rmccue/requests": "v2.0.6",
+        "nikic/fast-route": "v1.3.0",
+        "ext-pdo": "*",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {

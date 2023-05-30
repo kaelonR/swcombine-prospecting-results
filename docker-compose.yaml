@@ -1,6 +1,8 @@
 services:
   web:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: Nginx.dockerfile
     ports:
       - 80:80
     volumes:
@@ -14,8 +16,9 @@ services:
       - 9000
     volumes:
       - ./app:/app
-      - ./php-config/xdebug.ini:/usr/local/etc/php/conf.d/php-ext-xdebug.ini
       - ./php-config/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./php-config/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./php-config/opcache.ini:/usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
   database:
     image: mariadb:10
     environment:

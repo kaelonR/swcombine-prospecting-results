@@ -9,8 +9,6 @@ RUN composer dump-autoload --optimize --apcu --no-dev
 FROM php:8.2-fpm-alpine
 RUN apk add autoconf gcc make g++ zlib-dev linux-headers libzip-dev zip
 
-RUN docker-php-ext-install pdo pdo_mysql zip
-
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN docker-php-ext-install pdo pdo_mysql zip opcache
 
 COPY --from=composer_stage /composer /composer

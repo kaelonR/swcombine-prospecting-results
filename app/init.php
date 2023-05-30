@@ -25,8 +25,11 @@ $containerBuilder->addDefinitions([
 $container = $containerBuilder->build();
 $GLOBALS['container'] = $container;
 
-function runRoute(string $controller, string $method) {
+function runRoute(string $controller, string $method, ?array $vars = null): void {
+    if(!isset($vars))
+        $vars = [];
+
     $container = $GLOBALS['container'];
     $controllerInstance = $container->get($controller);
-    $controllerInstance->{$method}();
+    $controllerInstance->{$method}(...$vars);
 }
