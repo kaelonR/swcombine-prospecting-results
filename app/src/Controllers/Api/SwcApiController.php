@@ -1,6 +1,7 @@
 <?php
 namespace SWCPR\Controllers\Api;
 use SWCPR\Clients\StarWarsCombineClient;
+use SWCPR\Models\Swc\SystemDto;
 
 class SwcApiController extends ApiControllerBase {
     private readonly StarWarsCombineClient $starWarsCombineClient;
@@ -11,30 +12,17 @@ class SwcApiController extends ApiControllerBase {
 
     public function getSystems() {
         $systems = $this->starWarsCombineClient->getSystems();
-        $systemsResponse = array_map(
-            fn($system) => ['name' => $system, 'planets' => ['href' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/api/swc/systems/' . rawurlencode($system) . '/planets']],
-            $systems
-        );
-        $this->respondJson($systemsResponse);
+        $this->respondJson($systems);
     }
+
 
     public function getPlanetsForSystem($systemName) {
         $planets = $this->starWarsCombineClient->getPlanetsForSystem($systemName);
-        $planetsResponse = array_map(
-            fn($planet) => [...$planet, 'href' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/api/swc/planets/' . rawurlencode($planet['name'])],
-            $planets
-        );
-        $this->respondJson($planetsResponse);
+        $this->respondJson($planets);
     }
 
     public function getPlanetInfo($planetName) {
         $planet = $this->starWarsCombineClient->getPlanetInfo($planetName);
-        $planetResponse = [...$planet, 'system' => [
-            'name' => $planet['system'],
-            'planets' => [
-                'href' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/api/swc/systems/' . $planet['system'] . '/planets',
-            ]
-        ]];
-        $this->respondJson($planetResponse);
+        $this->respondJson($planet);
     }
 }
