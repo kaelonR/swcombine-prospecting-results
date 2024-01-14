@@ -19,7 +19,9 @@ If you wish to manually set up this app, the requirements are as follows:
 
 You'll need to configure the web server such that `/app/public` is the root directory (with requests that start with `/assets` being allowed access to the `/app/assets` folder), and such that regardless of the URL, the web server always loads up `app/public/index.php`. If you're using Nginx, you can use this repo's [nginx.conf file](https://github.com/kaelonR/swcombine-prospecting-results/blob/main/nginx.conf) as a reference for configuring your own Nginx server.
 
-Finally, you'll need to set your database credentials in `app/init.php` line 10.
+You'll need to set your database credentials in `app/init.php` line 10.
+
+Run `composer install` and `composer dump-autoload` to download and install the packages used. You may need to [Install Composer](https://getcomposer.org/download/) if you don't have it installed on your machine yet.
 
 Once done, make a GET request to `/init` (doing this in the browser is fine) to have the database initialized with a schema and tables ready to go. If you see the message 'Database initiated successfully' then everything is set up and you'll be able to use the app locally.
 
