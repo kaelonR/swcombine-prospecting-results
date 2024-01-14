@@ -30,7 +30,7 @@ The app is set up as an MVC (Model - View - Controller) app, with [PHP-DI](https
 
 ### Program Flow
 The entrypoint of the app is `/app/public/index.php`. This file will first load `/app/init.php`, which in turn sets up Dependency Injection, configures PDO with the database credentials, and configures Twig for rendering views.
-Once the app has been initialised a `runRoute` function is exposed, which can create an instance of a controller and run an arbitrary method with some parameters. The `app/public/index.php` file uses this to set up a dynamic router, supply it the possible URLs, and then uses `runRoute` to wire each route up to a method on a controller.
+Once the app has been initialised a `runRoute` function is exposed, which can create an instance of a controller from the DI container and run an arbitrary method with some parameters. The `app/public/index.php` file uses this to set up a dynamic router, supply it the possible URLs, and then uses `runRoute` to wire each route up to a method on a controller.
 
 If the URL being requested is one that will render a view, a method on a controller extending `UIControllerBase` will be executed. This controller will then execute the `render` method, which tells twig which view to render. This view can be found in `app/views`.
 
