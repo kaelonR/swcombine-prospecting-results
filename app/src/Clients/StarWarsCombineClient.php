@@ -1,9 +1,9 @@
 <?php
 namespace SWCPR\Clients;
 
-use SWCPR\Models\Swc\Link;
 use SWCPR\Models\Swc\PlanetDto;
 use SWCPR\Models\Swc\PlanetDtoGrid;
+use SWCPR\Models\Swc\PlanetDtoTerrain;
 use SWCPR\Models\Swc\SystemDto;
 use SWCPR\Models\Swc\SystemPlanetDto;
 
@@ -64,7 +64,7 @@ class StarWarsCombineClient extends HttpClient {
      * @return PlanetDto
      */
     function getPlanetInfo(string $planetUid): PlanetDto {
-        $cachedInfo = $this->tryGetCachedData("planet_$planetUid", PlanetDto::class);
+        $cachedInfo = $this->tryGetCachedData("planet_$planetUid", [PlanetDto::class, PlanetDtoGrid::class, PlanetDtoTerrain::class]);
         if ($cachedInfo !== null)
             return $cachedInfo[0];
 
@@ -77,7 +77,8 @@ class StarWarsCombineClient extends HttpClient {
         $parsedGrid = [];
         foreach($gridData as $point) {
             $attributes = $point->attributes;
-            $parsedGrid[] = new PlanetDtoGrid($attributes->x, $attributes->y, $attributes->code, $attributes->uid, $point->value);
+            $terrain = new PlanetDtoTerrain($attributes->code, $attributes->uid, $point->value);
+            $parsedGrid[] = new PlanetDtoGrid($attributes->x, $attributes->y, $terrain);
         }
 
         $planet = new PlanetDto($planetData->uid, $planetData->name, $planetData->location->system->value, $planetData->size, $planetData->type->value, $parsedGrid);
@@ -85,14 +86,15 @@ class StarWarsCombineClient extends HttpClient {
         return $planet;
     }
 
-    private function tryGetCachedData(string $fileName, string $fullyQualifiedClassName, int $maxAgeInSeconds = -1): array|null
+    private function tryGetCachedData(string $fileName, mixed $allowedClasses, int $maxAgeInSeconds = -1): array|null
     {
         $filePath = $this->getCachePath($fileName);
         if (!file_exists($filePath) || $maxAgeInSeconds != -1 && (time() - filemtime($filePath)) > $maxAgeInSeconds)
             return null;
 
         $fileText = file_get_contents($filePath);
-        return unserialize($fileText, ['allowed_classes' => [$fullyQualifiedClassName, Link::class]]);
+        $allowedClasses = is_array($allowedClasses) ? $allowedClasses : [$allowedClasses];
+        return unserialize($fileText, ['allowed_classes' => $allowedClasses]);
     }
 
     private function cacheData(string $fileName, array $data): void {
@@ -111,7 +113,8 @@ class StarWarsCombineClient extends HttpClient {
         return join(DIRECTORY_SEPARATOR, [$cacheDir, $sanitizedName . '.txt']);
     }
 
-    private function sanitizeFileName($name) {
+    private function sanitizeFileName($name): string
+    {
         $unsafe_characters = ["/", "\\", "?", "%", "*", ":", "|", "\"", "<", ">", "."];
         // Check if name is a Windows reserved filename; prepend with underscore if it is
         if (preg_match('/^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i', $name)) {
@@ -120,7 +123,6 @@ class StarWarsCombineClient extends HttpClient {
         // Replace unsafe characters:
         $nameSafe = str_replace($unsafe_characters, "_", $name);
         // Make sure the name does not exceed 255 characters:
-        $nameSafe = substr($nameSafe, 0, 255);
-        return $nameSafe;
+        return substr($nameSafe, 0, 255);
     }
 }

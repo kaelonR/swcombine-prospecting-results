@@ -1,5 +1,6 @@
 <?php
 namespace SWCPR\Controllers\Api;
+use JetBrains\PhpStorm\NoReturn;
 use SWCPR\Clients\StarWarsCombineClient;
 use SWCPR\Models\Swc\SystemDto;
 
@@ -10,19 +11,19 @@ class SwcApiController extends ApiControllerBase {
         $this->starWarsCombineClient = $starWarsCombineClient;
     }
 
-    public function getSystems() {
+    #[NoReturn] public function getSystems() {
         $systems = $this->starWarsCombineClient->getSystems();
         $this->respondJson($systems);
     }
 
 
-    public function getPlanetsForSystem($systemName) {
+    #[NoReturn] public function getPlanetsForSystem($systemName) {
         $planets = $this->starWarsCombineClient->getPlanetsForSystem($systemName);
         $this->respondJson($planets);
     }
 
-    public function getPlanetInfo($planetName) {
-        $planet = $this->starWarsCombineClient->getPlanetInfo($planetName);
+    #[NoReturn] public function getPlanetInfo($planetUid) {
+        $planet = $this->starWarsCombineClient->getPlanetInfo($planetUid);
         $this->respondJson($planet);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace SWCPR\Controllers\Api;
 
+use JetBrains\PhpStorm\NoReturn;
 use SWCPR\Repositories\DepositTypeRepository;
 use SWCPR\Repositories\TerrainTypeRepository;
 
@@ -14,7 +15,7 @@ class DefinitionsApiController extends ApiControllerBase
         $this->depositTypeRepository = $depositTypeRepository;
     }
 
-    public function getTerrainTypes(): void {
+    #[NoReturn] public function getTerrainTypes(): void {
         $terrainTypes = $this->terrainTypeRepository->list();
         $terrainTypesResponse = array_map(
             fn($terrainType) => ['uid' => $terrainType->uid, 'name' => $terrainType->name, 'img' => ['src' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $terrainType->imgUrl]],
@@ -23,7 +24,7 @@ class DefinitionsApiController extends ApiControllerBase
         $this->respondJson($terrainTypesResponse);
     }
 
-    public function getDepositTypes(): void {
+    #[NoReturn] public function getDepositTypes(): void {
         $depositTypes = $this->depositTypeRepository->list();
         $depositTypesResponse = array_map(
             fn($depositType) => ['uid' => $depositType->uid, 'name' => $depositType->name, 'img' => ['src' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $depositType->imgUrl]],

@@ -14,12 +14,13 @@ function declareRoutes(RouteCollector $r) {
     $r->addRoute('GET', '/', function() { runRoute(HomeController::class, 'index'); });
     $r->addRoute('GET', '/planets', function() { runRoute(PlanetController::class, 'index'); });
     $r->addRoute('GET', '/add-planet', function() { runRoute(PlanetController::class, 'addPlanet'); });
+    $r->addRoute('GET', '/add-planet/import', function() { runRoute(PlanetController::class, 'importPlanet');});
 
     $r->addGroup('/api', function (RouteCollector $r) {
         $r->addGroup('/swc', function (RouteCollector $r) {
             $r->addRoute('GET', '/systems', function() { runRoute(SwcApiController::class, 'getSystems');});
             $r->addRoute('GET', '/systems/{systemName}/planets', function($vars) { runRoute(SwcApiController::class, 'getPlanetsForSystem', $vars);});
-            $r->addRoute('GET', '/planets/{planetName}', function($vars) { runRoute(SwcApiController::class, 'getPlanetInfo', $vars);});
+            $r->addRoute('GET', '/planets/{planetUid}', function($vars) { runRoute(SwcApiController::class, 'getPlanetInfo', $vars);});
         });
 
         $r->addGroup('/definitions', function (RouteCollector $r) {
@@ -28,22 +29,26 @@ function declareRoutes(RouteCollector $r) {
         });
 
         $r->addGroup('/data', function (RouteCollector $r) {
-            $r->addGroup("/planets", function (RouteCollector $r) {
+            $r->addGroup('/planets', function (RouteCollector $r) {
                 $r->addRoute('GET', '', function() { runRoute(PlanetApiController::class, 'listPlanets');});
                 $r->addRoute('POST', '', function() { runRoute(PlanetApiController::class, 'addPlanet');});
-                $r->addRoute('DELETE', '/{planetId}', function($vars) { runRoute(PlanetApiController::class, 'deletePlanet', $vars);});
-                $r->addRoute('PUT', '/{planetId}/name', function($vars) { runRoute(PlanetApiController::class, 'updatePlanetName', $vars);});
-                $r->addRoute('GET', '/{planetId}/terrain-tiles', function($vars) { runRoute(PlanetApiController::class, 'getTerrainTilesForPlanet', $vars);});
-            });
-
-            $r->addGroup("/terrain-tiles", function (RouteCollector $r) {
-                $r->addRoute("PUT", "/{tileId}/terrain-type", function($vars) { runRoute(TerrainTilesApiController::class, 'updateTileTerrain', $vars);});
+                $r->addGroup('/{planetId}', function (RouteCollector $r) {
+                    $r->addRoute('GET', '', function ($vars) { runRoute(PlanetApiController::class, 'getPlanet', $vars);});
+                    $r->addRoute('DELETE', '', function($vars) { runRoute(PlanetApiController::class, 'deletePlanet', $vars);});
+                    $r->addRoute('PUT', '/name', function($vars) { runRoute(PlanetApiController::class, 'updatePlanetName', $vars);});
+                    $r->addRoute('PUT', '/system', function($vars) { runRoute(PlanetApiController::class, 'updatePlanetSystem', $vars);});
+                    $r->addRoute('PUT', '/terrain', function($vars) { runRoute(PlanetApiController::class, 'updatePlanetTerrain', $vars);});
+                });
+            
+                $r->addGroup('/{planetId}/deposits', function (RouteCollector $r) {
+                    $r->addRoute('POST', '', function($vars) { runRoute(PlanetApiController::class, 'addDeposit', $vars);});
+                    $r->addRoute('PUT', '/{depositId}', function($vars) { runRoute(PlanetApiController::class, 'updateDeposit', $vars);});
+                    $r->addRoute('DELETE', '/{depositId}', function($vars) { runRoute(PlanetApiController::class, 'deleteDeposit', $vars);});
+                });
             });
         });
-
-        $r->addRoute('GET', '/init', function() { runRoute(InitApiController::class, 'initDB'); });
     });
-    $r->addRoute('GET', '/articles/{id:\d+}[/{title}]', 'get_article_handler');
+    $r->addRoute('GET', '/init', function() { runRoute(InitApiController::class, 'initDB'); });
 }
 
 $dispatcher = FastRoute\simpleDispatcher(function($r) { declareRoutes($r); });

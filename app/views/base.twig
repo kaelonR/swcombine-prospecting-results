@@ -3,7 +3,9 @@
 <head>
     <link rel="stylesheet" href="/assets/css/reset.css"/>
     <link rel="stylesheet" href="/assets/css/main.css"/>
+    <link rel="stylesheet" href="/assets/css/select2-4.0.13.min.css">
     <script type="application/javascript" src="/assets/libs/jquery-3.6.4.min.js"></script>
+    <script type="application/javascript" src="/assets/libs/select2-4.0.13.full.min.js"></script>
     <title>{% block title %}{% endblock %} - SWCombine Prospecting Results</title>
     {% block head %}
     {% endblock %}
@@ -16,12 +18,17 @@
         <a class="navigation__button" href="/planets">
             <span>Browse Planets</span>
         </a>
-        <a class="navigation__button" href="/add-planet">
-            <span>Add Planet</span>
-        </a>
+        <div class="navigation__label dropdown">
+            Add Planet
+            <div class="dropdown__menu">
+                <a class="navigation__button" href="/add-planet/import">Import from SWC</a>
+                <a class="navigation__button" href="/add-planet">Add manually</a>
+            </div>
+        </div>
     </nav>
     <div class="content">
-            {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock %}
     </div>
 </body>
 </html>

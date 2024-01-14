@@ -9,4 +9,8 @@ class PlanetController extends UIControllerBase {
     public function addPlanet(): void {
         $this->render('planets/add-planet.twig');
     }
+
+    public function importPlanet(): void {
+        $this->render('planets/import-planet.twig');
+    }
 }

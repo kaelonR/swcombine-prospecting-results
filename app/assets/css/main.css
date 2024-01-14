@@ -15,6 +15,28 @@ body {
     "content";
 }
 
+button {
+    background: #003750;
+    border: 1px solid #195069;
+    color: white;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    transition: background-color .15s ease-in;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0f465f;
+}
+
+input {
+    border: 1px solid #195069;
+    background-color: #001932;
+    color: white;
+    border-radius: 4px;
+    padding: 5px;
+}
+
 .navigation {
     grid-area: navigation;
     background: #003750;
@@ -35,6 +57,10 @@ body {
     justify-content: center;
 }
 
+.dropdown__menu .navigation__label, .dropdown__menu .navigation__button {
+    padding: 8px;
+}
+
 .navigation__button {
     transition: background-color .15s ease-in;
 }
@@ -49,4 +75,65 @@ body {
 
 .content {
     grid-area: content;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown__menu {
+    display: none;
+    position: absolute;
+    min-width: 140px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #003750;
+    border-radius: 4px;
+    padding: 12px 16px;
+    z-index: 1;
+    top: 40px;
+}
+
+.dropdown__menu a {
+    display: block;
+}
+
+.dropdown:hover .dropdown__menu {
+    display: block;
+}
+
+.dropdown__caret {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #000;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+body .content .select2-container--default .select2-selection--single {
+    background-color: #003750;
+    border: solid #195069;
+    border-width: 1px 0px;
+}
+
+body .content .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: white;
+}
+
+body .select2-dropdown {
+    background-color: #003750;
+}
+
+body .select2-container--default .select2-results__option[aria-selected="true"]{
+    background-color: #001932;
+}
+
+body .select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 1px solid #195069;
+    background-color: #001932;
+    color: white;
+    border-radius: 4px;
+}
+
+body .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    outline: none;
 }

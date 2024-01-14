@@ -38,4 +38,14 @@ class DepositTypeRepository extends RepositoryBase {
         $result = $this->pdo->query("SELECT * FROM DepositTypes")->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($row) => new DepositType($row['uid'], $row['name'], $row['img_url']), $result);
     }
+
+    public function getByUid(string $uid): ?DepositType {
+        $stmt = $this->pdo->prepare("SELECT * FROM DepositTypes WHERE uid = :uid");
+        $stmt->execute(['uid' => $uid]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if(empty($result))
+            return null;
+
+        return new DepositType($result['uid'], $result['name'], $result['img_url']);
+    }
 }
