@@ -6,7 +6,7 @@ You can try out the demo at TBA (not available online yet)
 
 ## Installing Locally
 ### Option 1 - Docker Desktop
-If you wish to get the app running locally, the easiest way to do so is with Docker Desktop, as I made this repo with Docker in mind for easy portability, so that no configuration is needed.
+If you wish to get the app running locally, the easiest way to do so is with [Docker Desktop](https://www.docker.com/products/docker-desktop/), as I made this repo with Docker in mind for easy portability, so that no configuration is needed.
 
 To get it running on Docker Desktop, simply clone the repo, then run `docker-compose up --detach` in the terminal. Finally, go to http://localhost:80/init to initialize the database. After that, the app is ready to be used on http://localhost:80.
 
