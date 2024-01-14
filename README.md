@@ -17,7 +17,7 @@ If you wish to manually set up this app, the requirements are as follows:
 - Web Server with the ability to always serve app/public/index.php regardless of the URL of each request (e.g. Nginx or Apache, the Docker setup uses Nginx)
 - MariaDB database server.
 
-You'll need to set up the web server such that `/app/public` is the root directory (with requests that start with `/assets` being allowed access to the `/app/assets` folder), and such that regardless of the URL, the web server always loads up `app/public/index.php`. If you're using Nginx, you can use this repo's [nginx.conf file](https://github.com/kaelonR/swcombine-prospecting-results/blob/main/nginx.conf) as a reference for configuring your own Nginx server.
+You'll need to configure the web server such that `/app/public` is the root directory (with requests that start with `/assets` being allowed access to the `/app/assets` folder), and such that regardless of the URL, the web server always loads up `app/public/index.php`. If you're using Nginx, you can use this repo's [nginx.conf file](https://github.com/kaelonR/swcombine-prospecting-results/blob/main/nginx.conf) as a reference for configuring your own Nginx server.
 
 Finally, you'll need to set your database credentials in `app/init.php` line 10.
 
