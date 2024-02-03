@@ -9,13 +9,22 @@ class PlanetListing {
 
     public string $system;
 
-    public int $size;
+    /**
+     * @var Deposit[]
+     */
+    public array $deposits;
 
-    public function __construct(int $id, string $name, string $system, int $size)
+    /**
+     * @param int $id
+     * @param string $name
+     * @param string $system
+     * @param Deposit[] $deposits
+     */
+    public function __construct(int $id, string $name, string $system, array $deposits)
     {
         $this->id = $id;
         $this->name = $name;
         $this->system = $system;
-        $this->size = $size;
+        $this->deposits = $deposits;
     }
 }

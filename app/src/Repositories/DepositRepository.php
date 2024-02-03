@@ -16,7 +16,7 @@ class DepositRepository extends RepositoryBase {
      * @return Deposit[]
      * @throws Exception
      */
-    public function listDepositsForPlanet(int $planetId): array {
+    public function listForPlanet(int $planetId): array {
         $stmt = $this->pdo->prepare("SELECT PD.id, PGT.coord_x, PGT.coord_y, PD.deposit_type_id, PD.amount, PD.notes FROM PlanetDeposits PD
 INNER JOIN PlanetGridTiles PGT ON PD.planet_grid_tile_id = PGT.id
 INNER JOIN Planets P ON PGT.planet_id = P.id

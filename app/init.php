@@ -10,7 +10,6 @@ $containerBuilder->addDefinitions([
     PDO::class => DI\factory(fn() => new PDO('mysql:dbname=swcombine-prospecting-results;host=database', 'swcdemo', 'swcdemo', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]))
 ]);
 
-
 //Twig
 $twigLoader = new FilesystemLoader('/app/Views');
 $twig = new Twig($twigLoader, [

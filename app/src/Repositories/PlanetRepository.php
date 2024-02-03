@@ -22,17 +22,25 @@ class PlanetRepository extends RepositoryBase {
 
     /**
      * @return PlanetListing[]
+     * @throws Exception
      */
     public function list() : array {
-        $result = $this->pdo->query("SELECT * FROM Planets")->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new PlanetListing($row['id'], $row['name'], $row['system'], $row['size']), $result);
+        $rows = $this->pdo->query("SELECT id, name, `system` FROM Planets")->fetchAll(PDO::FETCH_ASSOC);
+        $planets = [];
+
+        foreach($rows as $row) {
+            $deposits = $this->depositRepository->listForPlanet($row['id']);
+            $planets[] = new PlanetListing($row['id'], $row['name'], $row['system'], $deposits);
+        }
+
+        return $planets;
     }
 
     /**
      * @throws Exception
      */
     public function getById(int $planetId): ?Planet {
-        $stmt = $this->pdo->prepare("SELECT * FROM Planets WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT id, name, `system`, size FROM Planets WHERE id = :id");
         $success = $stmt->execute(['id' => $planetId]);
         if(!$success) {
             throw new Exception("something went wrong while attempting to retrieve planet $planetId.");
@@ -42,7 +50,7 @@ class PlanetRepository extends RepositoryBase {
             return null;
 
         $tiles = $this->getTerrainTilesForPlanet($planetId);
-        $deposits = $this->depositRepository->listDepositsForPlanet($planetId);
+        $deposits = $this->depositRepository->listForPlanet($planetId);
         return new Planet($result['id'], $result['name'], $result['system'], $result['size'], $tiles, $deposits);
     }
 

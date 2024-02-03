@@ -10,7 +10,7 @@ abstract class UIControllerBase {
         $this->twig = $twig;
     }
 
-    protected function render(string $templateName): void {
-        echo $this->twig->render($templateName);
+    protected function render(string $templateName, array $context = []): void {
+        echo $this->twig->render($templateName, $context);
     }
 }

@@ -10,7 +10,7 @@ use SWCPR\Models\Swc\SystemPlanetDto;
 class StarWarsCombineClient extends HttpClient {
     /** @return SystemDto[] */
     function getSystems(): array {
-        $cachedSystems = $this->tryGetCachedData('systems', SystemDto::class, 60 * 60 * 24);
+        $cachedSystems = $this->tryGetCachedData('systems', SystemDto::class, 60 * 60 * 24 * 7);
         if($cachedSystems != null)
             return $cachedSystems;
 
