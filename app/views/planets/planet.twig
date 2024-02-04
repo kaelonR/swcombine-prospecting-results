@@ -1,0 +1,136 @@
+{% extends "base.twig" %}
+{% block title %}{{ planet.name }}{% endblock %}
+{% block head %}
+    <style>
+        .page-container {
+            display: grid;
+            grid-template-columns: 6fr 4fr;
+            grid-template-rows: 8em 8em 1fr;
+            grid-template-areas: "title title" "toolbar filters" "map resources";
+            height: 100%;
+        }
+        .title {
+            grid-area: title;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .toolbar {
+            grid-area: toolbar;
+            padding: 1em;
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+        }
+
+        .filters { grid-area: filters }
+        .map {
+            grid-area: map;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: start;
+            padding: 2em;
+            overflow-y: hidden;
+        }
+        .resources { grid-area: resources }
+
+        .title__block {
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+        }
+
+        .title__block h1 {
+            font-size: 2em;
+        }
+
+        .toolbar__modes, .toolbar__terrain:not(.hidden), .toolbar__deposits:not(.hidden) {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: row;
+            gap: .25rem
+        }
+
+        .toolbar__modes {
+            flex: 0 1 0;
+            gap: .5rem;
+        }
+
+        .toolbar__terrain__tile {
+            width: 6%;
+            max-width: 50px;
+            border: 1px solid #195069;
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .toolbar__terrain__tile.active {
+            border: 1px solid #2e96bf;
+            filter: brightness(.7);
+        }
+
+        .toolbar__terrain__tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .map__canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map__terrain-layer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .map__terrain-layer .map__terrain-layer__tile {
+            position: absolute;
+            background-size: 100% 100%;
+        }
+    </style>
+    <script type="application/javascript" src="/assets/js/planet_editor.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="page-container">
+        <div class="title">
+            <div class="title__block">
+                <h1><span id="planet-name">{{ planet.name }}</span></h1>
+                <h3>System: <span id="planet-system">{{ planet.system }}</span> <span id="title-edit-button">✎</span></h3>
+            </div>
+        </div>
+        <div id="toolbar" class="toolbar">
+            <div class="toolbar__modes">
+                <button id="terrain-editor" data-mode="terrain" type="button">Terrain Editor</button>
+                <button id="deposit-editor" data-mode="deposits" type="button">Deposit Editor</button>
+            </div>
+            <div class="toolbar__terrain hidden">
+                {% for terrainType in terrainTypes  %}
+                <div class="toolbar__terrain__tile" title="{{ terrainType.name }}" data-uid="{{ terrainType.uid }}">
+                    <img src="{{ terrainType.imgUrl }}" alt="{{ terrainType.name }}"/>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="toolbar__deposits hidden"></div>
+        </div>
+        <div id="map" class="map">
+            <div class="map__canvas" data-planet-id="{{ planet.id }}" data-planet-size="{{ planet.size }}">
+                <div class="map__terrain-layer hidden">
+                    {%  for tile in planet.terrain %}
+                        <div class="map__terrain-layer__tile map__tile" data-id="{{ tile.id }}" data-x="{{ tile.x }}" data-y="{{ tile.y }}" data-terrain="{{ tile.terrainTypeUid }}" title="{{ tile.x }}, {{ tile.y }}">
+                        </div>
+                    {%  endfor %}
+                </div>
+                <div class="map__deposit-layer hidden"></div>
+            </div>
+        </div>
+        <div class="filters"></div>
+        <div class="resources"></div>
+    </div>
+{% endblock %}

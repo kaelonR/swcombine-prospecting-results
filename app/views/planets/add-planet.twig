@@ -80,7 +80,8 @@
             fetch(`/api/data/planets`, {method: 'POST', body: json, headers: {'Content-Type': 'application/json'}})
                 .then(async response => {
                     const responseJson = await response.json();
-                    console.log(responseJson);
+                    const planetId = responseJson.id;
+                    window.location.href = `/planets/${planetId}`;
                 }
             )
         })

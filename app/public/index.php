@@ -11,8 +11,9 @@ use SWCPR\Controllers\{Api\DefinitionsApiController,
     PlanetController};
 
 function declareRoutes(RouteCollector $r) {
-    $r->addRoute('GET', '/', function() { runRoute(HomeController::class, 'index'); });
+    $r->addRoute('GET', '/', function() { runRoute(PlanetController::class, 'index'); });
     $r->addRoute('GET', '/planets', function() { runRoute(PlanetController::class, 'index'); });
+    $r->addRoute('GET', '/planets/{planetId}', function($vars) { runRoute(PlanetController::class, 'viewPlanet', $vars);});
     $r->addRoute('GET', '/add-planet', function() { runRoute(PlanetController::class, 'addPlanet'); });
     $r->addRoute('GET', '/add-planet/import', function() { runRoute(PlanetController::class, 'importPlanet');});
 
@@ -48,6 +49,7 @@ function declareRoutes(RouteCollector $r) {
             });
         });
     });
+
     $r->addRoute('GET', '/init', function() { runRoute(InitApiController::class, 'initDB'); });
 }
 

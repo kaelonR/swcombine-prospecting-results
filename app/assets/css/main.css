@@ -25,7 +25,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button:hover, button.active {
     background-color: #0f465f;
 }
 
@@ -35,6 +35,10 @@ input {
     color: white;
     border-radius: 4px;
     padding: 5px;
+}
+
+.hidden {
+    display: none;
 }
 
 .navigation {
