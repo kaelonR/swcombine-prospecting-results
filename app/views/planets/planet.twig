@@ -85,14 +85,33 @@
         }
 
         .map__terrain-layer {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .map__deposits-layer {
+            position: absolute;
+            z-index: 20;
+            pointer-events: none;
         }
 
         .map__terrain-layer .map__terrain-layer__tile {
             position: absolute;
             background-size: 100% 100%;
+        }
+
+        .map__deposits-layer .map__deposits-layer__tile {
+            position: absolute;
+            background-size:65% 65%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        #deposit-editor-modal form {
+            margin-top: 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
         }
     </style>
     <script type="application/javascript" src="/assets/js/planet_editor.js"></script>
@@ -117,20 +136,80 @@
                 </div>
                 {% endfor %}
             </div>
-            <div class="toolbar__deposits hidden"></div>
+            <div class="toolbar__deposits hidden">
+                <span>In order to add/edit/delete deposits, click the relevant tile on the map.</span>
+            </div>
         </div>
         <div id="map" class="map">
             <div class="map__canvas" data-planet-id="{{ planet.id }}" data-planet-size="{{ planet.size }}">
-                <div class="map__terrain-layer hidden">
-                    {%  for tile in planet.terrain %}
-                        <div class="map__terrain-layer__tile map__tile" data-id="{{ tile.id }}" data-x="{{ tile.x }}" data-y="{{ tile.y }}" data-terrain="{{ tile.terrainTypeUid }}" title="{{ tile.x }}, {{ tile.y }}">
-                        </div>
-                    {%  endfor %}
+                <div class="map__container">
+                    <div class="map__terrain-layer hidden">
+                        {%  for tile in planet.terrain %}
+                            <div class="map__terrain-layer__tile map__tile" data-id="{{ tile.id }}" data-x="{{ tile.x }}" data-y="{{ tile.y }}" data-terrain="{{ tile.terrainTypeUid }}">
+                            </div>
+                        {%  endfor %}
+                    </div>
+                    <div class="map__deposits-layer hidden">
+                        {% for deposit in planet.deposits %}
+                            <div class="map__deposits-layer__tile map__tile" data-id="{{ deposit.id }}" data-x="{{ deposit.x }}" data-y="{{ deposit.y }}" data-deposit="{{ deposit.depositTypeUid }}" data-amount="{{ deposit.amount }}" data-notes="{{ deposit.notes }}">
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="map__deposit-layer hidden"></div>
             </div>
         </div>
         <div class="filters"></div>
         <div class="resources"></div>
+        <div id='map-tooltip' style='position: absolute; visibility: hidden; z-index: 100; background-image: none; left: 0; top: 0;'>
+            <table style='border: none; background: #666666; width: 200px'>
+                <tbody>
+                <tr><td>
+                        <table style='border: none; width: 100%'>
+                            <tbody>
+                            <tr><td>
+                                    <b><span id='tooltip-top' style='font-family: Verdana,Arial,Helvetica; color: #FFF; font-size: x-small; font-weight: bold'></span></b>
+                                </td></tr>
+                            </tbody>
+                        </table>
+                        <table style='width: 100%; border: none; background: #FFFFE1;'>
+                            <tbody>
+                            <tr><td>
+                                    <span id='tooltip-bottom' style='font-family: Verdana,Arial,Helvetica; color: #000; font-size: x-small; vertical-align: top'></span>
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="deposit-editor-modal" class="modal" style="z-index: 11000">
+            <h3 class="title"></h3>
+            <form>
+                <div>
+                    <label for="deposit">Deposit type:</label>
+                    <select id="deposit" name="deposit" style="min-width: 200px" required>
+                        {% for depositType in depositTypes %}
+                            <option value="{{ depositType.uid }}">{{ depositType.name }}</option>
+                        {%  endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" step="1" min="1" required/>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label for="notes">Notes:</label>
+                    <textarea id="notes" name="notes" style="background: #001932; border: 1px solid #195069; border-radius: 4px; color: white"></textarea>
+                </div>
+                <div class="buttons">
+                    <input type="hidden" name="id" value=""/>
+                    <input type="hidden" name="x" value=""/>
+                    <input type="hidden" name="y" value=""/>
+                    <button type="submit" id="modal__confirm">Save</button>
+                    <button type="button" id="modal__delete">Delete</button>
+                    <button type="button" id="modal__close">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}

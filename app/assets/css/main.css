@@ -113,13 +113,13 @@ input {
     margin-left: 10px;
 }
 
-body .content .select2-container--default .select2-selection--single {
+body .select2-container--default .select2-selection--single {
     background-color: #003750;
     border: solid #195069;
     border-width: 1px 0px;
 }
 
-body .content .select2-container--default .select2-selection--single .select2-selection__rendered {
+body .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: white;
 }
 
@@ -140,4 +140,16 @@ body .select2-container--default .select2-search--dropdown .select2-search__fiel
 
 body .select2-container--default .select2-search--dropdown .select2-search__field:focus {
     outline: none;
+}
+
+div.jquery-modal.blocker {
+    z-index: 1000;
+}
+
+div.jquery-modal.blocker .modal {
+    background: #003750;
+}
+
+#deposit-editor-modal {
+    z-index: 1100;
 }

@@ -47,7 +47,27 @@ class PlanetController extends UIControllerBase {
     public function viewPlanet(int $planetId): void {
         $planet = $this->planetRepository->getById($planetId);
         $terrainTypes = array_filter($this->terrainTypeRepository->list(), fn($x) => $x->uid != '24:16' && $x->uid != '24:17');
-        $this->render('planets/planet.twig', ['planet' => $planet, 'terrainTypes' => $terrainTypes]);
+        $depositTypes = $this->depositTypeRepository->list();
+        usort($depositTypes, fn($a, $b) => strcmp($a->name, $b->name));
+
+        $depositTiles = [];
+        for($y = 0; $y < $planet->size; $y++) {
+            for($x = 0; $x < $planet->size; $x++) {
+                $depositTiles["$x:$y"] = ['id' => 0, 'x' => $x, 'y' => $y, 'depositTypeUid' => '', 'amount' => 0, 'notes' => ''];
+            }
+        }
+        foreach($planet->deposits as $deposit) {
+            $key = $deposit->x . ':' . $deposit->y;
+            $depositTile = $depositTiles[$key];
+            $depositTile['id'] = $deposit->id;
+            $depositTile['depositTypeUid'] = $deposit->depositTypeUid;
+            $depositTile['amount'] = $deposit->amount;
+            $depositTile['notes'] = $deposit->notes;
+            $depositTiles[$key] = $depositTile;
+        }
+
+        $planet->deposits = array_values($depositTiles);
+        $this->render('planets/planet.twig', ['planet' => $planet, 'terrainTypes' => $terrainTypes, 'depositTypes' => $depositTypes]);
     }
 
     public function addPlanet(): void {
