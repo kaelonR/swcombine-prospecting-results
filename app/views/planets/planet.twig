@@ -113,6 +113,10 @@
             flex-direction: column;
             gap: 1em;
         }
+
+        #resources-table {
+            width: 100%;
+        }
     </style>
     <script type="application/javascript" src="/assets/js/planet_editor.js"></script>
 {% endblock %}
@@ -159,7 +163,21 @@
             </div>
         </div>
         <div class="filters"></div>
-        <div class="resources"></div>
+        <div class="resources">
+            <table id="resources-table" class="swc-table">
+                <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Units</th>
+                    <th>x</th>
+                    <th>y</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
         <div id='map-tooltip' style='position: absolute; visibility: hidden; z-index: 100; background-image: none; left: 0; top: 0;'>
             <table style='border: none; background: #666666; width: 200px'>
                 <tbody>

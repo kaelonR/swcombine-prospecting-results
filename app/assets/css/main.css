@@ -153,3 +153,24 @@ div.jquery-modal.blocker .modal {
 #deposit-editor-modal {
     z-index: 1100;
 }
+
+table.swc-table {
+    text-align: left;
+    font-size: 1rem;
+}
+
+table.swc-table thead {
+    background: #001e37
+}
+
+table.swc-table tbody {
+    background: #003750;
+}
+
+table.swc-table td, table th {
+    padding: 10px 20px 10px 0;
+}
+
+table.swc-table td:first-child, table th:first-child {
+    padding-left: 20px;
+}

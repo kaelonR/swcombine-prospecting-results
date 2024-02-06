@@ -1,3 +1,5 @@
+const numberFormat = new Intl.NumberFormat("en-US");
+
 window.MAP_VIEWER = {
     layers: {
         terrain: undefined,
@@ -68,6 +70,52 @@ window.MAP_VIEWER.reRenderTiles = function() {
     this.layers.deposits.classList.remove('hidden')
 }
 
+window.MAP_VIEWER.rerenderResourceList = function() {
+    const resourceTable = document.querySelector('#resources-table tbody')
+
+    for(const existingItem of resourceTable.children) {
+        const depositKey = existingItem.getAttribute('data-key');
+        if(this.editor.deposits.hasOwnProperty(depositKey)) {
+            const deposit = this.editor.deposits[depositKey];
+            existingItem.children[0].innerText = this.data.deposits[deposit.depositTypeUid].name;
+            existingItem.children[1].innerText = numberFormat.format(deposit.amount);
+            existingItem.children[4].innerText = deposit.notes || '';
+        } else {
+            existingItem.remove();
+        }
+    }
+
+    for(const [depositKey, dataItem] of Object.entries(this.editor.deposits)) {
+        const tableItem = resourceTable.querySelector(`tr[data-key="${depositKey}"]`);
+        if(tableItem === null) {
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-key', depositKey);
+
+            const materialTd = document.createElement('td');
+            materialTd.innerText = this.data.deposits[dataItem.depositTypeUid].name;
+            const amountTd = document.createElement('td');
+            amountTd.innerText = numberFormat.format(dataItem.amount);
+            const xTd = document.createElement('td');
+            xTd.innerText = dataItem.x;
+            const yTd = document.createElement('td');
+            yTd.innerText = dataItem.y;
+            const notesTd = document.createElement('td');
+            notesTd.innerText = dataItem.notes;
+
+            tr.append(materialTd, amountTd, xTd, yTd, notesTd);
+            resourceTable.appendChild(tr);
+        }
+    }
+
+    [...resourceTable.children]
+        .sort((a, b) => {
+            const resourceNameComparison = a.children[0].innerText.localeCompare(b.children[0].innerText)
+            if(resourceNameComparison != 0) return resourceNameComparison;
+            return Number(b.children[1].innerText.replaceAll(',', '')) - Number(a.children[1].innerText.replaceAll(',', ''));
+        })
+        .forEach(x => resourceTable.appendChild(x));
+}
+
 window.MAP_VIEWER.changeMode = function(mode) {
     this.editor.mode = mode;
     for(const modeButton of this.toolbar.modes.children) {
@@ -111,7 +159,7 @@ window.MAP_VIEWER.renderTooltip = function(tile, e) {
     let tooltipBottomHtml = this.data.terrain[tile.getAttribute('data-terrain')].name;
     if(this.editor.deposits.hasOwnProperty(`${x}:${y}`)) {
         const depositData = this.editor.deposits[`${x}:${y}`];
-        tooltipBottomHtml += `<br/>${this.data.deposits[depositData.depositTypeUid].name} (${depositData.amount} units)`
+        tooltipBottomHtml += `<br/>${this.data.deposits[depositData.depositTypeUid].name} (${numberFormat.format(depositData.amount)} units)`
         if(depositData.notes.length) {
             tooltipBottomHtml += `<br/>${depositData.notes}`
         }
@@ -196,6 +244,7 @@ window.MAP_VIEWER.saveDeposit = async function() {
     tile.setAttribute('data-id', depositId);
     this.loadDeposits();
     this.reRenderTiles();
+    this.rerenderResourceList();
     $.modal.close();
 }
 
@@ -217,6 +266,7 @@ window.MAP_VIEWER.deleteDeposit = async function() {
     const depositDataKey = `${formData.get('x')}:${formData.get('y')}`;
     delete this.editor.deposits[depositDataKey];
     this.reRenderTiles();
+    this.rerenderResourceList();
     $.modal.close();
 }
 
@@ -277,6 +327,7 @@ async function hydrate() {
     window.MAP_VIEWER.loadDeposits();
     window.MAP_VIEWER.recalculateTileSize();
     window.MAP_VIEWER.reRenderTiles();
+    window.MAP_VIEWER.rerenderResourceList();
 
     for(const modeButton of window.MAP_VIEWER.toolbar.modes.children) {
         modeButton.addEventListener('click', () => window.MAP_VIEWER.onModeButtonClicked(modeButton.getAttribute('data-mode')));
@@ -310,6 +361,9 @@ async function hydrate() {
         e.preventDefault();
         window.MAP_VIEWER.saveDeposit();
     })
+
+
+
 }
 
 async function fetchTerrainTypes() {

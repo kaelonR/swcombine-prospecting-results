@@ -10,24 +10,6 @@
 
     table {
         margin-top: 3rem;
-        text-align: left;
-        font-size: 1rem;
-    }
-
-    table thead {
-        background: #001e37
-    }
-
-    table tbody {
-        background: #003750;
-    }
-
-    table td, table th {
-        padding: 10px 20px 10px 0;
-    }
-
-    table td:first-child, table th:first-child {
-        padding-left: 20px;
     }
 
     .actions {
@@ -47,12 +29,11 @@
 {% endblock %}
 {% block content %}
     <div class="page-container">
-        <table id="planets-table">
+        <table id="planets-table" class="swc-table">
             <thead>
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">System</th>
-                    <th scope="col">Resources</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -61,7 +42,6 @@
                 <tr data-planet-id="{{ planet.id }}" data-planet-name="{{ planet.name }}">
                     <td><a href="/planets/{{ planet.id }}">{{ planet.name }}</a></td>
                     <td>{{ planet.system }}</td>
-                    <td>to-do</td>
                     <td class="actions">
                         <a href="/planets/{{ planet.id }}" title="Edit">✎</a>
                         <span class="delete-planet" title="Delete planet">🗑</span>
