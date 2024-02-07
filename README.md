@@ -2,7 +2,7 @@
 Little demo application made for the SWC Dev Challenge.
 
 ## Demo
-You can try out the demo at TBA (not available online yet)
+You can try out the demo at https://swc-prospecting-results.jordy.dev/.
 
 ## Installing Locally
 ### Option 1 - Docker Desktop
